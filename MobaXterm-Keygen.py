@@ -1,7 +1,9 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 '''
-Author: Double Sine
-License: GPLv3
+Original Author: Double Sine
+Fork Author: paz <paz@paz.yt>
+
+Please buy MobaXTerm if you can afford it!
 '''
 import os, sys, zipfile
 
@@ -80,11 +82,11 @@ def DecryptBytes(key : int, bs : bytes):
 
 class LicenseType:
     Professional = 1
-    Educational = 3
-    Persional = 4
+    Education = 3
+    Personal = 4
 
 def GenerateLicense(Type : LicenseType, Count : int, UserName : str, MajorVersion : int, MinorVersion):
-    assert(Count >= 0)
+    #assert(Count >= 0)
     LicenseString = '%d#%s|%d%d#%d#%d3%d6%d#%d#%d#%d#' % (Type, 
                                                           UserName, MajorVersion, MinorVersion, 
                                                           Count, 
@@ -98,24 +100,35 @@ def GenerateLicense(Type : LicenseType, Count : int, UserName : str, MajorVersio
 
 def help():
     print('Usage:')
-    print('    MobaXterm-Keygen.py <UserName> <Version>')
+    print('    MobaXterm-Keygen.py <UserName> <Version> [Type] [Count]')
     print()
     print('    <UserName>:      The Name licensed to')
-    print('    <Version>:       The Version of MobaXterm')
-    print('                     Example:    10.9')
+    print('    <Version>:       The Version of MobaXterm (20.5)')
+    print('    [Type]:          The edition (Professional, Education, Personal)')
+    print('    [Count]:         The number of licenses')
+    print()
+    print('    MobaXTerm-keygen by paz (originally DoubleSine/nszy007)')
     print()
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if (len(sys.argv) <= 2 or len(sys.argv) >= 6):
         help()
         exit(0)
     else:
+        if (len(sys.argv) >= 4 and len(sys.argv[3]) >= 8 and hasattr(LicenseType, sys.argv[3])):
+            ChosenLicenseType = getattr(LicenseType, sys.argv[3])
+        else:
+            ChosenLicenseType = LicenseType.Professional
+        if(len(sys.argv) == 5): 
+            LicenseCount = int(sys.argv[4])
+        else:
+            LicenseCount = int(1)
         MajorVersion, MinorVersion = sys.argv[2].split('.')[0:2]
         MajorVersion = int(MajorVersion)
         MinorVersion = int(MinorVersion)
-        GenerateLicense(LicenseType.Professional, 
-                        1,
-                        sys.argv[1], 
+        GenerateLicense(ChosenLicenseType, 
+                        LicenseCount,
+                         sys.argv[1], 
                         MajorVersion, 
                         MinorVersion)
         print('[*] Success!')
